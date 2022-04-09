@@ -100,3 +100,34 @@ while True:
     print(f"Input: {inp}")
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162589710-64051acd-b679-493e-abe8-6c71f8de6474.png)
+
+Language definition:
+```
+import inline
+inline.commands = ["English", "Русский"]
+input = inline.input #replace default input
+
+while True:
+    inp = input(minLength=1)
+    print(f"Input: {inp}")
+    prediction = inline.predict(inp)[0]
+    if prediction == "English":
+        print(f"(EN) Prediction: {prediction}")
+    elif prediction == "Русский":
+        print(f"(РУ) Предсказывание: {prediction}")
+```
+![image](https://user-images.githubusercontent.com/75082388/162590144-c2cd96cb-c6f9-48c3-a804-828cbfb8b0e0.png)
+
+Response Choices:
+```
+import inline
+inline.commands = ["1 Games", "2 Films", "3 Other"]
+input = inline.input #replace default input
+
+while True:
+    inp = input(minLength=1)
+    print(f"Input: {inp}")
+    prediction = inline.predict(inp)[0]
+    print(f"Prediction: {prediction}")
+```
+![image](https://user-images.githubusercontent.com/75082388/162590336-738c766c-b8f2-4304-a783-d0ad4198a062.png)
