@@ -1,5 +1,9 @@
 # Inline-Input
-New input system for python
+__Install library:__
+
+```
+pip install inline-input
+```
 
 __Use:__
 
