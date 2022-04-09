@@ -64,3 +64,20 @@ while True:
     print(f"input: {inp}")
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162586760-6f067103-47c0-4973-bd45-f172c0fb682e.png)
+
+Check for existence
+```
+import inline
+inline.commands = ["Help", "Info", "Quit", "Inline", "Magic"]
+input = inline.input #replace default input
+
+while True:
+    inp = input()
+    if inline.isCommand(inp):
+        print("Inline command: " + inp)
+    else:
+        print("Unknown command: " + inp)
+```
+
+![image](https://user-images.githubusercontent.com/75082388/162587358-4ceb7ef3-00e8-4585-a7a4-8c03f7790345.png)
+
