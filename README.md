@@ -72,9 +72,9 @@ input = inline.input #replace default input
 while True:
     inp = input()
     if inline.isCommand(inp): # or inline.isCommand(inp, command=commands)
-        print("Inline command: " + inp)
+        print(f"Inline command: {inp}")
     else:
-        print("Unknown command: " + inp)
+        print(f"Unknown command: {inp}")
 ```
 
 ![image](https://user-images.githubusercontent.com/75082388/162587358-4ceb7ef3-00e8-4585-a7a4-8c03f7790345.png)
@@ -90,3 +90,13 @@ print(f"Prediction Score: {prediction[1]}%")
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162587648-325c1ef6-b228-4d88-96e1-99336e46782e.png)
 
+Default input with the same behavior
+```
+import inline
+input = inline.input #replace default input
+
+while True:
+    inp = input() #without commands
+    print(f"Input: {inp}")
+```
+![image](https://user-images.githubusercontent.com/75082388/162589710-64051acd-b679-493e-abe8-6c71f8de6474.png)
