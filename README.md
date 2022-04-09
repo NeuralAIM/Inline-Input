@@ -10,7 +10,6 @@ __Use:__
 Commands option 1:
 ```
 import inline
-
 inline.commands = ["Help", "Info", "Quit", "Inline", "Magic"]
 input = inline.input #replace default input
 
@@ -21,7 +20,6 @@ while True:
 Commands option 2:
 ```
 import inline
-
 commands = ["Help", "Info", "Quit", "Inline", "Magic"]
 input = inline.input #replace default input
 
@@ -73,11 +71,22 @@ input = inline.input #replace default input
 
 while True:
     inp = input()
-    if inline.isCommand(inp):
+    if inline.isCommand(inp): # or inline.isCommand(inp, command=commands)
         print("Inline command: " + inp)
     else:
         print("Unknown command: " + inp)
 ```
 
 ![image](https://user-images.githubusercontent.com/75082388/162587358-4ceb7ef3-00e8-4585-a7a4-8c03f7790345.png)
+
+```
+import inline
+inline.commands = ["Help", "Info", "Quit", "Inline", "Magic"]
+
+prediction = inline.predict("In") # or inline.predict("In", command=commands)
+
+print(f"Prediction Word: '{prediction[0]}'")
+print(f"Prediction Score: {prediction[1]}%")
+```
+![image](https://user-images.githubusercontent.com/75082388/162587648-325c1ef6-b228-4d88-96e1-99336e46782e.png)
 
