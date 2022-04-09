@@ -46,7 +46,7 @@ inline.commands = ["Help", "Info", "Quit", "Inline", "Magic"]
 input = inline.input #replace default input
 
 while True:
-    inp = input(minLength=5)
+    inp = input(minLength=5) #or input(maxLength=5)
     print(f"input: {inp}")
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162586647-f18bf23e-2337-484d-98b9-d535dcc09fe2.png)
