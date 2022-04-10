@@ -63,7 +63,7 @@ while True:
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162586760-6f067103-47c0-4973-bd45-f172c0fb682e.png)
 
-Check for existence
+Check for existence:
 ```
 import inline
 inline.commands = ["Help", "Info", "Quit", "Inline", "Magic"]
@@ -79,6 +79,7 @@ while True:
 
 ![image](https://user-images.githubusercontent.com/75082388/162587358-4ceb7ef3-00e8-4585-a7a4-8c03f7790345.png)
 
+Prefiction commands:
 ```
 import inline
 inline.commands = ["Help", "Info", "Quit", "Inline", "Magic"]
@@ -90,7 +91,7 @@ print(f"Prediction Score: {prediction[1]}%")
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162587648-325c1ef6-b228-4d88-96e1-99336e46782e.png)
 
-Default input with the same behavior
+Default input with the same behavior:
 ```
 import inline
 input = inline.input #replace default input
@@ -131,3 +132,30 @@ while True:
     print(f"Prediction: {prediction}")
 ```
 ![image](https://user-images.githubusercontent.com/75082388/162590336-738c766c-b8f2-4304-a783-d0ad4198a062.png)
+
+Paste Clipboard:
+```
+import inline
+inline.commands = ["Default text", "Pasted text"]
+input = inline.input #replace default input
+
+while True:
+    inp = input()
+    print(f"Input: {inp}")
+```
+
+![image](https://user-images.githubusercontent.com/75082388/162623834-90b78680-def6-46fa-a00a-ceb9cad65e2f.png)
+
+Multiline autocomplete:
+```
+import inline
+print("\n\n\n")
+inline.commands = ["""Inline:.\n├───.input()\n│   └───prefix=">> "\n│       └───free=True"""]
+input = inline.input #replace default input
+
+while True:
+    inp = input()
+    print(f"Input: {inp}") #Press Ctrl+V
+```
+![image](https://user-images.githubusercontent.com/75082388/162623555-15884b3d-b3a1-486d-9474-ce6c126cb463.png)
+
