@@ -157,5 +157,6 @@ while True:
     inp = input()
     print(f"Input: {inp}") #Press Ctrl+V
 ```
-![image](https://user-images.githubusercontent.com/75082388/162623555-15884b3d-b3a1-486d-9474-ce6c126cb463.png)
+
+![image](https://user-images.githubusercontent.com/75082388/162626499-e3827a81-6747-4238-af2e-5f42b163288a.png)
 
