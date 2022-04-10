@@ -146,6 +146,20 @@ while True:
 
 ![image](https://user-images.githubusercontent.com/75082388/162623834-90b78680-def6-46fa-a00a-ceb9cad65e2f.png)
 
+Temporary display of information:
+```
+import inline
+inline.commands = ["Info", "Help", "Version", "Timed info"]
+input = inline.input #replace default input
+
+while True:
+    inp = input(free=False, timeInfo=1) #Default 3 sec
+    print(f"Input: {inp}")
+```
+
+![image](https://user-images.githubusercontent.com/75082388/162630483-14b5da24-0857-45c0-9b51-22961badf380.png)
+
+
 Multiline autocomplete:
 ```
 import inline
