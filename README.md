@@ -163,7 +163,6 @@ while True:
 Multiline autocomplete:
 ```
 import inline
-print("\n\n\n")
 inline.commands = ["""Inline:.\n├───.input()\n│   └───prefix=">> "\n│       └───free=True"""]
 input = inline.input #replace default input
 
@@ -174,3 +173,14 @@ while True:
 
 ![image](https://user-images.githubusercontent.com/75082388/162626499-e3827a81-6747-4238-af2e-5f42b163288a.png)
 
+Autocomplete on Send:
+```
+import inline
+inline.commands = ["Info", "Help", "Version"]
+inline.autoCompleteOnEnter = True # enable autocomplete on enter
+input = inline.input #replace default input
+
+while True:
+    inp = input(free=False) # free disabled!
+    print(f"Input: {inp}")
+```
