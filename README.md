@@ -1,5 +1,5 @@
 # Inline-Input
-![wtf](https://user-images.githubusercontent.com/75082388/162802268-b2fe55b1-8db2-49b9-bd03-3983385ee53d.png)
+![wtf](https://user-images.githubusercontent.com/75082388/162805166-ec0480cb-be5e-4463-9e1b-80bffd5b1f1c.png)
 
 
 __Install library:__
