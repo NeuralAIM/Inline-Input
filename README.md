@@ -20,7 +20,7 @@ inp = input(minLength=2, maxLength=10) # default minLength=0, maxLength=0
 inp = input(timeInfo=5) # or timeInfo=False, default is 1 second
 inp = input(iHelp=2) # Tips for use Tab Autocomplete, default iHelp=3
 
-# 
+# Autocomplete on Enter:
 inline.autoCompleteOnEnter = True # Autocomplete on Enter and Tab, default False - only on Tab
 inp = input(free=False) # Only your commands are allowed!
 
