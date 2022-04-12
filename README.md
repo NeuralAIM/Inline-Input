@@ -18,7 +18,7 @@ inp = input(prefix=None) # default ">> "
 inp = input(free=False) # or free=True, default is True
 inp = input(minLength=2, maxLength=10) # default minLength=0, maxLength=0
 inp = input(timeInfo=5) # or timeInfo=False, default is 1 second
-inp = input(iHelp=2) # Tips for use Tab Autocomplete, default iHelp=3
+inp = input(iHelp=2) # How many characters must the user type to be prompted to use the Autocomplete
 
 # Autocomplete on Enter:
 inline.autoCompleteOnEnter = True # Autocomplete on Enter and Tab, default False - only on Tab
@@ -30,6 +30,9 @@ inp = input() #Autocomplete with your commands on Tab
 
 # Commands option 2:
 inp = input(command=["Help", "Info", "Version"]) # or use inline.commands = ["Help", "Info", "Version"]
-```
 
-I'm not a programmer, my code is not pretty and intimidating : )
+#Functions:
+inline.clear_console(lineDel=1) #Delete one line of console
+inline.predict(text, list) # Predicting a similar word
+inline.isCommand(text, list) # Does the command exist on the list
+```
