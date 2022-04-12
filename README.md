@@ -36,3 +36,58 @@ inline.clear_console(lineDel=1) #Delete one line of console
 inline.predict(text, list) # Predicting a similar word
 inline.isCommand(text, list) # Does the command exist on the list
 ```
+Commands options:
+```
+#1
+import inline #Import inline module
+input = inline.input #replace default input
+
+inline.commands = ["Info", "Help", "Version"]
+
+answer = input("Command: ", free=False) # The Free=False parameter prohibits sending other commands not from the list
+```
+OR:
+```
+#2
+import inline #Import inline module
+input = inline.input #replace default input
+
+commands = ["Info", "Help", "Version"]
+
+answer = input(free=False, command=commands)
+```
+---
+Example code:
+```
+#Navigating through folders
+import os
+import inline #Import inline module
+input = inline.input #replace default input
+path = "C:\\" #Default path
+
+while True:
+    commands = os.listdir(path)
+    print("Choose directory:")
+
+    for command in commands:
+        if not command.startswith("$"):
+            print(f"- {command}")
+        else:
+            commands.remove(command)
+
+    inp = input(command=commands, cursor=False)
+    os.system('cls')
+
+    if inp == "." or inp.lower() == "return": # go back
+        path = path[:-(len(path.split("\\")[-2]) + 2)] + "\\"
+    elif os.path.isdir(path + inp + "\\"):
+        path += inp + "\\"
+    else:
+        if os.path.isfile(path + inp):
+            print("You want open the file?")
+            inp_ = input(command=["Yes", "No"], free=False) # Free=False forces the user to use strictly our commands
+            if inp_.lower() == "yes":
+                os.system(path + inp)
+        else:
+            print("Directory does not exist:", path + inp + "\\", end="\n\n")
+```
