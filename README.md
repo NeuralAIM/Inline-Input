@@ -48,7 +48,7 @@ input = inline.input #replace default input
 
 inline.commands = ["Info", "Help", "Version"]
 
-answer = input() # The Free=False parameter prohibits sending other commands not from the list
+answer = input()
 ```
 OR:
 ```
