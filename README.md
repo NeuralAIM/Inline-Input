@@ -17,19 +17,13 @@ input = inline.input #replace default input
 inp = input(prefix=None) # default ">> "
 inp = input(free=False) # or free=True, default is True
 inp = input(minLength=2, maxLength=10) # default minLength=0, maxLength=0
-inp = input(timeInfo=5) # or timeInfo=False, default is 1 second
+inp = input(cursor=False) # show or hide cursor, default True
+inp = input(secret=True) # hide input and predictions text, default False
+inp = input(cursorVisibleTime=0.9, cursorNotVisibleTime=0.6) # сursor blink speed
+inp = input(timeInfo=5) # display time of tooltips, default is 2 second
+inp = input(timer=False) # setting the timer for tips
 inp = input(iHelp=2) # How many characters must the user type to be prompted to use the Autocomplete
-
-# Autocomplete on Enter:
-inline.autoCompleteOnEnter = True # Autocomplete on Enter and Tab, default False - only on Tab
-inp = input(free=False) # Only your commands are allowed!
-
-# Commands option 1:
-inline.commands = ["Info", "Help", "Version", "Cls"]
-inp = input() #Autocomplete with your commands on Tab
-
-# Commands option 2:
-inp = input(command=["Help", "Info", "Version"]) # or use inline.commands = ["Help", "Info", "Version"]
+inp = input(inp="Start text") # text that will be entered for the user (the user can delete or edit it)
 
 #Functions:
 inline.clear_console(lineDel=1) #Delete one line of console
@@ -44,7 +38,7 @@ input = inline.input #replace default input
 
 inline.commands = ["Info", "Help", "Version"]
 
-answer = input("Command: ", free=False) # The Free=False parameter prohibits sending other commands not from the list
+answer = input() # The Free=False parameter prohibits sending other commands not from the list
 ```
 OR:
 ```
@@ -54,10 +48,17 @@ input = inline.input #replace default input
 
 commands = ["Info", "Help", "Version"]
 
-answer = input(free=False, command=commands)
+answer = input(command=commands)
 ```
+
+Autocomplete on Enter:
+```
+inline.autoCompleteOnEnter = True # Autocomplete on Enter and Tab, default False - only on Tab
+inp = input(free=False) # Only your commands are allowed!
+```
+
 ---
-Example code:
+Examples code:
 ```
 #Navigating through folders
 import os
@@ -90,4 +91,42 @@ while True:
                 os.system(path + inp)
         else:
             print("Directory does not exist:", path + inp + "\\", end="\n\n")
+```
+
+Another simple example:
+```
+import inline #Import inline module
+input = inline.input #replace default input
+commands = ["Exit"] #Default commands
+
+while True:
+    print("What kind of command do you want to create?")
+    command = input(prefix="Name command: ")
+
+    print("\nTry using your command!")
+    if inline.isCommand(command, commands):
+        inline.clear_console(lineDel=4) #delete last 4 lines
+        print("Command already exists!")
+        continue
+    else:
+        commands.append(command)
+    inp = input(command=commands, free=False)
+
+    print(f"\nGreat, {inp} is working!\n- What the command will print?")
+    text = input("Enter text: ")
+
+    print("\nTry using your command or write 'Exit'")
+    inp = input(free=False, command=commands)
+    if inp.lower() == commands[-1].lower(): # First try
+        print(f"Printed: {text}")
+    else:
+        break
+
+    print("\nDo you want to create another command?")
+    inline.autoCompleteOnEnter = True
+    inp = input(free=False, command=["Yes", "No"])
+    inline.autoCompleteOnEnter = False
+    if inline.isCommand(inp, "No"): #Best try
+        print("Bye - bye!")
+        break
 ```
