@@ -7,6 +7,16 @@ __Install library:__
 pip install inline-input
 ```
 
+The simplest example:
+```
+import inline #Import inline module
+input = inline.input #replace default input
+
+while True:
+    print("Say 'Yes' or 'No'")
+    inp = input("Input: ", command=["Yes", "No"], free=False)
+```
+
 __Use:__
 ```
 # Preparing:
