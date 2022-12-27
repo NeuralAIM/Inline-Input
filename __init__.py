@@ -26,55 +26,30 @@ CloseClipboard = u32.CloseClipboard
 CloseClipboard.argtypes = None
 CloseClipboard.restype = w.BOOL
 
-def predict(text, list=None):
-    """
-    Если текст не пустой, то будет возвращено лучшее совпадение из списка команд
-    
-    :param text: Предсказуемый текст
-    :param list: Список команд для поиска. Если не указано, будет использоваться список команд
-    :return: прогноз и счет.
-    """
-    if list is None:
-        if commands is None:
-            return None, None
-        else:
-            list = commands
+def predict(text, options=None):
+    if options is None:
+        options = commands
+        return None, None
 
     if utils.full_process(text):
-        pred, score = process.extractOne(text, list)
+        pred, score = process.extractOne(text, options)
         return pred, score
     else:
         return None, None
 
-def isCommand(text, command=None):
-    """
-    Он проверяет, является ли текст командой
-    
-    :param text: Команда для проверки
-    :param command: Список команд
-    :return: Функция isCommand() возвращается.
-    """
-    if type(command) == str:
-        command = [command]
+def is_command(text, command=None):
     if command is None:
-        if commands is None:
-            return False
-        else:
-            command = commands
-
-    for com in command:
-        if com.lower() == text.lower():
-            return True
-    else:
+        command = commands
         return False
+
+    if isinstance(command, str):
+        command = [command]
+
+    return text.lower() in [com.lower() for com in command]
+
 
 
 def get_clip():
-    """
-    Он открывает буфер обмена, получает данные, блокирует его, получает текст, разблокирует его,
-    закрывает буфер обмена и возвращает текст.
-    :return: Текст, который в данный момент находится в буфере обмена.
-    """
     try:
         OpenClipboard(None)
         h_clip_mem = GetClipboardData(CF_UNICODETEXT)
@@ -87,40 +62,15 @@ def get_clip():
         CloseClipboard()
         return ""
 
-# def MoveYcur(y):
-#     if y > 0:
-#         print(f"\033[{y}A", end='\r')
-#     elif y < 0:
-#         print(f"\033[{abs(y)}B", end='\r')
-
 def clear_console(pred=None, inp=None, lineDel=1):
-    """
-    Он очищает консоль, а затем перемещая курсор вверх на lineDel количество строк.
-    
-    :param pred: Прогнозируемый текст
-    :param inp: Вводимый текст
-    :param lineDel: Количество строк для удаления, по дефолту 1
-    :return: количество строк в тексте.
-    """
-    if pred is None and inp is None:
-        print("\x1b[2K\r" + "\033[%d;A" % (lineDel), end="\r")
-        return
-    if len(pred.split("\n")) > len(inp.split("\n")):
-        text = pred
-    else:
-        text = inp
-    if (text is None) or (len(text.split("\n")) == 0):
-        print("\x1b[2K\r" + "\033[%d;A" % (1), end="\r")
-    else:
-        for i in range(len(text.split("\n"))-1):
-            print("\x1b[2K\r" + "\033[%d;A" % (1), end="\r")
+    text = pred or inp or ''
+    num_lines = len(text.split("\n"))
+    if num_lines == 0:
+        num_lines = 1
+    print("\x1b[2K\r" + "\033[%d;A" % (num_lines), end="\r")
+
 
 def curVisible(isVisible=True):
-    """
-    Он выводит на консоль специальный символ, который указывает консоли скрыть или показать курсор.
-    
-    :param isVisible: Правда или ложь, defaults to True (optional)
-    """
     if isVisible:
         print('\033[?25h', end="")
     else:
@@ -128,27 +78,6 @@ def curVisible(isVisible=True):
 
 
 def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeInfo=None, secret=False, inp='', minLength=0, maxLength=0, iHelp=3, cursorVisibleTime=0.9, cursorNotVisibleTime=0.6):
-    """
-    Это функция, которая принимает префикс, список команд и несколько других параметров и возвращает
-    данные, введенные пользователем.
-    
-    :param prefix: Префикс ввода, defaults to >>  (optional)
-    :param command: Список команд, которые может ввести пользователь
-    :param free: Если True, пользователь может ввести любой текст. Если False, пользователь может
-    вводить только текст, соответствующий команде, defaults to True (optional)
-    :param cursor: Если True, курсор будет виден, defaults to True (optional)
-    :param timer: Если True, таймер будет отображаться, defaults to True (optional)
-    :param timeInfo: Время в секундах, в течение которого будет отображаться таймер
-    :param secret: Если True, ввод будет скрыт, defaults to False (optional)
-    :param inp: Входная строка
-    :param minLength: Минимальная длина ввода, defaults to 0 (optional)
-    :param maxLength: Максимальное количество символов, которое можно ввести, defaults to 0 (optional)
-    :param iHelp: Сколько раз вам нужно ввести одно и то же, прежде чем будет предложено автозаполнение,
-    defaults to 3 (optional)
-    :param cursorVisibleTime: Как долго курсор виден
-    :param cursorNotVisibleTime: Время, когда курсор не виден
-    :return: Ввод от пользователя.
-    """
     if prefix is None:
         prefix = ""
     lastpred = ""
@@ -205,7 +134,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                 postfix = ""
                 ipostfix = timeInfo
                 s_time = time() - 0.1
-                #MoveYcur(curposy)
             elif cursor:
                 if curisVis and scur_time + cursorVisibleTime < time():
                     curisVis = False
@@ -261,12 +189,8 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                     else:
                         postfix = "<F>The cursor is already right."
                 elif key == "H":
-                    #curposy += 1
-                    #MoveYcur(1)
                     postfix =  "<F>Can't move the cursor up."
                 elif key == "P":
-                    #curposy -= 1
-                    #MoveYcur(-1)
                     postfix =  "<F>Can't move the cursor down."
                 elif key == "R":
                     postfix = "<F>Use Ctrl + V to paste"
@@ -338,7 +262,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                                 isCleared = True
                             return inp
                         else:
-                            if isCommand(inp, command=command):
+                            if is_command(inp, command=command):
                                 curVisible(True)
                                 if isCleared:
                                     clear_console(lastpred, inp)
@@ -448,3 +372,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                     print(prefix + "*" * len(inp) + "  " + colored_postfix, end='\b' * (postfixlen + len("  ")))
                 else:
                     print(prefix + inp + "  " + colored_postfix, end='\b' * (postfixlen + len("  ")))
+
+
+print(input(command = ['help', 'hey'],free= False ))
