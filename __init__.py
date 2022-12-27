@@ -63,11 +63,18 @@ def get_clip():
         return ""
 
 def clear_console(pred=None, inp=None, lineDel=1):
-    text = pred or inp or ''
-    num_lines = len(text.split("\n"))
-    if num_lines == 0:
-        num_lines = 1
-    print("\x1b[2K\r" + "\033[%d;A" % (num_lines), end="\r")
+    if pred is None and inp is None:
+        print("\x1b[2K\r" + "\033[%d;A" % (lineDel), end="\r")
+        return
+    if len(pred.split("\n")) > len(inp.split("\n")):
+        text = pred
+    else:
+        text = inp
+    if (text is None) or (len(text.split("\n")) == 0):
+        print("\x1b[2K\r" + "\033[%d;A" % (1), end="\r")
+    else:
+        for i in range(len(text.split("\n"))-1):
+            print("\x1b[2K\r" + "\033[%d;A" % (1), end="\r")
 
 
 def curVisible(isVisible=True):
@@ -85,7 +92,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
     pred = ""
     postfix = ""
     curposx = 0
-    #curposy = 0
     isprediction = True
     isCleared = False
     isSelected = False
@@ -320,6 +326,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
             if pred != None:
                 if isCleared:
                     clear_console(lastpred, inp)
+                    isCleared = False
                 else:
                     isCleared = True
 
@@ -361,6 +368,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
             else:
                 if isCleared:
                     clear_console(lastpred, inp)
+                    isCleared = False
                 else:
                     isCleared = True
                 lastpred = ""
