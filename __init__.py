@@ -372,6 +372,3 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                     print(prefix + "*" * len(inp) + "  " + colored_postfix, end='\b' * (postfixlen + len("  ")))
                 else:
                     print(prefix + inp + "  " + colored_postfix, end='\b' * (postfixlen + len("  ")))
-
-
-print(input(command = ['help', 'hey'],free= False ))
