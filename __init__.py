@@ -1,4 +1,4 @@
-from thefuzz import process, utils
+from thefuzz import process, utils, fuzz
 from colorama import Fore, init
 import msvcrt as m
 import ctypes
@@ -26,27 +26,42 @@ CloseClipboard = u32.CloseClipboard
 CloseClipboard.argtypes = None
 CloseClipboard.restype = w.BOOL
 
-def predict(text, options=None):
-    if options is None:
-        options = commands
-        return None, None
+def predict(text, list=None):
+    test_list = []
+    for l in list:
+        if l.startswith(l):
+            #print(l)
+            test_list.append(l)
+
+    if len(test_list) != 0:
+        list = test_list
+
+    if list is None:
+        if commands is None:
+            return None, None
+        else:
+            list = commands
 
     if utils.full_process(text):
-        pred, score = process.extractOne(text, options)
+        pred, score = process.extractOne(text, list, scorer=fuzz.WRatio)
         return pred, score
     else:
         return None, None
 
-def is_command(text, command=None):
-    if command is None:
-        command = commands
-        return False
-
-    if isinstance(command, str):
+def isCommand(text, command=None):
+    if type(command) == str:
         command = [command]
+    if command is None:
+        if commands is None:
+            return False
+        else:
+            command = commands
 
-    return text.lower() in [com.lower() for com in command]
-
+    for com in command:
+        if com.lower() == text.lower():
+            return True
+    else:
+        return False
 
 
 def get_clip():
@@ -62,6 +77,12 @@ def get_clip():
         CloseClipboard()
         return ""
 
+# def MoveYcur(y):
+#     if y > 0:
+#         print(f"\033[{y}A", end='\r')
+#     elif y < 0:
+#         print(f"\033[{abs(y)}B", end='\r')
+
 def clear_console(pred=None, inp=None, lineDel=1):
     if pred is None and inp is None:
         print("\x1b[2K\r" + "\033[%d;A" % (lineDel), end="\r")
@@ -75,7 +96,6 @@ def clear_console(pred=None, inp=None, lineDel=1):
     else:
         for i in range(len(text.split("\n"))-1):
             print("\x1b[2K\r" + "\033[%d;A" % (1), end="\r")
-
 
 def curVisible(isVisible=True):
     if isVisible:
@@ -92,6 +112,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
     pred = ""
     postfix = ""
     curposx = 0
+    #curposy = 0
     isprediction = True
     isCleared = False
     isSelected = False
@@ -125,6 +146,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
     while True:
         kbh = m.kbhit()
         if kbh or s_time + 0.1 < time():
+            pred_last_inp = inp
             s_time = time()
             lentext = 0
             if kbh:
@@ -140,6 +162,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                 postfix = ""
                 ipostfix = timeInfo
                 s_time = time() - 0.1
+                #MoveYcur(curposy)
             elif cursor:
                 if curisVis and scur_time + cursorVisibleTime < time():
                     curisVis = False
@@ -195,8 +218,12 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                     else:
                         postfix = "<F>The cursor is already right."
                 elif key == "H":
+                    #curposy += 1
+                    #MoveYcur(1)
                     postfix =  "<F>Can't move the cursor up."
                 elif key == "P":
+                    #curposy -= 1
+                    #MoveYcur(-1)
                     postfix =  "<F>Can't move the cursor down."
                 elif key == "R":
                     postfix = "<F>Use Ctrl + V to paste"
@@ -268,7 +295,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                                 isCleared = True
                             return inp
                         else:
-                            if is_command(inp, command=command):
+                            if isCommand(inp, command=command):
                                 curVisible(True)
                                 if isCleared:
                                     clear_console(lastpred, inp)
@@ -310,8 +337,11 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                 isSelected = False
                 
             print("\x1b[2K\r" + "\033[1;A")
-            if isprediction:
+            if isprediction and kbh:
+                print(isprediction, kbh)
                 pred, score = predict(inp, command)
+            elif not kbh and pred:
+                pass
             else:
                 pred = None
 
@@ -326,7 +356,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
             if pred != None:
                 if isCleared:
                     clear_console(lastpred, inp)
-                    isCleared = False
                 else:
                     isCleared = True
 
@@ -368,7 +397,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
             else:
                 if isCleared:
                     clear_console(lastpred, inp)
-                    isCleared = False
                 else:
                     isCleared = True
                 lastpred = ""
