@@ -43,7 +43,7 @@ def predict(text, list=None):
             list = commands
 
     if utils.full_process(text):
-        pred, score = process.extractOne(text, list, scorer=fuzz.WRatio)
+        pred, score = process.extractOne(text, list, scorer=fuzz.token_sort_ratio)
         return pred, score
     else:
         return None, None
@@ -338,7 +338,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                 
             print("\x1b[2K\r" + "\033[1;A")
             if isprediction and kbh:
-                print(isprediction, kbh)
                 pred, score = predict(inp, command)
             elif not kbh and pred:
                 pass
