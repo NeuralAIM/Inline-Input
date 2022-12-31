@@ -45,7 +45,7 @@ The input function allows you to get user input with a customizable prefix and p
 ```
 prefix = '>> '
 command = ['help', 'exit', 'clear']
-inp = input(prefix, command, cursor=True)
+inp = input(prefix, command)
 print(inp)
 ```
 For a full list of options and their default values, see the function definition at the top of this file.
