@@ -4,9 +4,12 @@ import msvcrt as m
 import ctypes
 import ctypes.wintypes as w
 from time import time
+
 init(autoreset=True)
+
 commands = None
 autoCompleteOnEnter = False
+
 CF_UNICODETEXT = 13
 u32 = ctypes.WinDLL('user32')
 k32 = ctypes.WinDLL('kernel32')
@@ -26,24 +29,25 @@ CloseClipboard = u32.CloseClipboard
 CloseClipboard.argtypes = None
 CloseClipboard.restype = w.BOOL
 
-def predict(text, list=None):
-    test_list = []
-    for l in list:
-        if l.startswith(l):
-            #print(l)
-            test_list.append(l)
+def predict(text, lst=None):
+    text = text.lower()
+    test_lst = []
 
-    if len(test_list) != 0:
-        list = test_list
+    for l in lst:
+        if l.lower().startswith(text):
+            test_lst.append(l)
 
-    if list is None:
+    if test_lst:
+        lst = test_lst
+
+    if lst is None:
         if commands is None:
             return None, None
         else:
             list = commands
 
     if utils.full_process(text):
-        pred, score = process.extractOne(text, list, scorer=fuzz.token_sort_ratio)
+        pred, score = process.extractOne(text, lst, scorer=fuzz.token_sort_ratio)
         return pred, score
     else:
         return None, None
@@ -131,8 +135,9 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
     else:
         timeInfo = timeInfo * 10
     ipostfix = timeInfo
-
-    if command is None:
+    if command is False:
+        isprediction = False
+    elif not command:
         if commands is None:
             isprediction = False
         else:
@@ -146,7 +151,6 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
     while True:
         kbh = m.kbhit()
         if kbh or s_time + 0.1 < time():
-            pred_last_inp = inp
             s_time = time()
             lentext = 0
             if kbh:
@@ -293,7 +297,7 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                                 print("\x1b[2K\r", end='\r')
                             else:
                                 isCleared = True
-                            return inp
+                            return inp.lower()
                         else:
                             if isCommand(inp, command=command):
                                 curVisible(True)
@@ -303,9 +307,9 @@ def input(prefix=">> ", command=None, free=True, cursor=True, timer=True, timeIn
                                 else:
                                     isCleared = True
                                 if autoCompleteOnEnter:
-                                    return pred
+                                    return pred.lower()
                                 else:
-                                    return inp
+                                    return inp.lower()
                             else:
                                 postfix =  "<F>Doesn't match commands."
                     else:
